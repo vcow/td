@@ -23,6 +23,14 @@ namespace Views.Field
             Assert.IsNotNull(_fieldCollider);
         }
 
+        private void OnDestroy()
+        {
+            if (_clickFieldEvent != null)
+            {
+                _clickFieldEvent.RemoveAllListeners();
+            }
+        }
+
         private void OnMouseDown()
         {
             var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
