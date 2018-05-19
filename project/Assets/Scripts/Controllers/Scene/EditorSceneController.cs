@@ -1,6 +1,10 @@
 ﻿#define EDITOR_MODE
 
+using System;
+using System.IO;
+using System.Xml.Serialization;
 using Models;
+using Models.Enemies;
 using Models.Towers;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -12,6 +16,7 @@ namespace Controllers.Scene
     {
         [SerializeField] private Transform _menuContainer;
         [SerializeField] private GameObject _menuButtonPrefab;
+        [SerializeField] private Text _moneyText;
 
         private IItem _selectedItem;
 
@@ -31,6 +36,18 @@ namespace Controllers.Scene
 #if !EDITOR_MODE
             _sourceField = GameModel.Instance.FieldModel.Clone();
 #endif
+
+            if (_moneyText != null)
+            {
+                var gm = GameModel.Instance;
+                gm.MoneyChangedEvent += OnMoneyChanged;
+                OnMoneyChanged(gm.Money);
+            }
+        }
+
+        private void OnMoneyChanged(decimal value)
+        {
+            _moneyText.text = string.Format("money: {0}", value);
         }
 
         private void OnDestroy()
@@ -40,6 +57,11 @@ namespace Controllers.Scene
             foreach (var button in _menuContainer.GetComponentsInChildren<Button>())
             {
                 button.onClick.RemoveAllListeners();
+            }
+
+            if (_moneyText != null)
+            {
+                GameModel.Instance.MoneyChangedEvent -= OnMoneyChanged;
             }
         }
 
@@ -157,7 +179,44 @@ namespace Controllers.Scene
                 Assert.IsNotNull(button);
                 ApplyButton(button, item);
             }
+            
+#if EDITOR_MODE
+            var b = Instantiate(_menuButtonPrefab, _menuContainer);
+            var savedButton = b.GetComponent<Button>();
+            Assert.IsNotNull(savedButton);
+            var label = savedButton.GetComponentInChildren<Text>();
+            if (label != null) label.text = "Save";
+            savedButton.onClick.AddListener(OnSave);
+#endif
         }
+        
+#if EDITOR_MODE
+        private void OnSave()
+        {
+            var serializer = new XmlSerializer(typeof(FieldModel), new Type[]
+            {
+                typeof(CellModel),
+                typeof(WaveModel),
+                typeof(ItemType),
+                typeof(EnemyType),
+                typeof(WaveEnemyEntry)
+            });
+
+            var fm = GameModel.Instance.FieldModel;
+            var savePath = Path.Combine(Application.persistentDataPath, string.Format("{0}.xml", fm.Name));
+            if (File.Exists(savePath))
+            {
+                Debug.LogWarning(string.Format("File {0} already exists.", savePath));
+                return;
+            }
+            
+            var fs = new FileStream(savePath, FileMode.Create);
+            serializer.Serialize(fs, fm);
+            fs.Close();
+            
+            Debug.Log(string.Format("Field was saved to: {0}", savePath));
+        }
+#endif
 
         private void ApplyButton(Button button, IItem item)
         {

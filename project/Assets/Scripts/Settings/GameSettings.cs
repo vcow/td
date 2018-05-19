@@ -28,6 +28,14 @@ namespace Settings
         
         [Header("Target")]
         public GameObject TargetPrefab;
+        public int TargetHealth = 3;
+        
+        [Header("Enemy Wave")]
+        public float EmissionSpeed = 5f;
+        public int SmallEnemiesInWave = 20;
+        public int MediumEnemiesInWave = 10;
+        public int LargeEnemiesInWave = 5;
+        public int NumberOfWaves = 3;
 
 #if UNITY_EDITOR
         [MenuItem("Assets/Create/Game Settings", false, 10000)]

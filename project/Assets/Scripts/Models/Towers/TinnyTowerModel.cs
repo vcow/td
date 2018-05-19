@@ -14,12 +14,12 @@
 
         public decimal BuyPrice
         {
-            get { return 0; }
+            get { return 50; }
         }
         
         public decimal SellPrice
         {
-            get { return 0; }
+            get { return 25; }
         }
 
         public IWeapon Weapon
