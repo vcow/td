@@ -1,4 +1,6 @@
-﻿#if UNITY_EDITOR
+﻿
+using Boo.Lang;
+#if UNITY_EDITOR
 using System.Linq;
 using UnityEditor;
 #endif
@@ -36,6 +38,9 @@ namespace Settings
         public int MediumEnemiesInWave = 10;
         public int LargeEnemiesInWave = 5;
         public int NumberOfWaves = 3;
+
+        [Header("Levels")]
+        public string[] AssetNames;
 
 #if UNITY_EDITOR
         [MenuItem("Assets/Create/Game Settings", false, 10000)]

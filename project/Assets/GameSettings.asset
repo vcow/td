@@ -26,3 +26,13 @@ MonoBehaviour:
     type: 2}
   TargetPrefab: {fileID: 1275630997219534, guid: 55d1caa6e1caf9d45b1fb19384d37b5f,
     type: 2}
+  TargetHealth: 3
+  EmissionSpeed: 5
+  SmallEnemiesInWave: 20
+  MediumEnemiesInWave: 10
+  LargeEnemiesInWave: 5
+  NumberOfWaves: 3
+  AssetNames:
+  - Levels/field_001.xml
+  - Levels/field_002.xml
+  - Levels/field_003.xml
