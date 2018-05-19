@@ -1,56 +1,91 @@
-﻿using Models;
+﻿#define EDITOR_MODE
+
+using Models;
+using Models.Towers;
 using UnityEngine;
 using UnityEngine.Assertions;
-using Views.Field;
+using UnityEngine.UI;
 
 namespace Controllers.Scene
 {
-    public class EditorSceneController : SceneControllerBase
+    public class EditorSceneController : FieldSceneControllerBase
     {
+        [SerializeField] private Transform _menuContainer;
+        [SerializeField] private GameObject _menuButtonPrefab;
+
         private IItem _selectedItem;
 
-        [SerializeField] private FieldView _field;
-
-        protected override void Start()
-        {
-            base.Start();
-            if (!IsInitialized) return;
-
-            InitScene();
-        }
+        private FieldModel _sourceField;
 
         protected override void InitScene()
         {
-            Assert.IsNotNull(_field);
-            _field.SetupMarker(CalcMarkerSize());
-            _field.MarkerPosition = CalcItemPosition(Vector2.zero);
+            base.InitScene();
+
+            CreateMenu();
+
+            Field.SetupMarker(CalcMarkerSize());
+            Field.MarkerPosition = CalcItemPosition(Vector2.zero);
+
+            _sourceField = GameModel.Instance.FieldModel.Clone();
         }
 
-        public void OnClickField(Vector2 value)
+        private void OnDestroy()
         {
-            _field.MarkerPosition = CalcItemPosition(value);
+            foreach (var button in _menuContainer.GetComponentsInChildren<Button>())
+            {
+                button.onClick.RemoveAllListeners();
+            }
+        }
+
+        public override void OnClickField(Vector2 value)
+        {
+            base.OnClickField(value);
             if (_selectedItem == null) return;
+
+            // TODO: Check money
+            
+            var coord = Pos2Coord(value);
         }
 
-        private static Vector2 CalcMarkerSize()
+        private void CreateMenu()
         {
-            var fm = GameModel.Instance.FieldModel;
-            return fm != null ? new Vector2(1f / fm.Size.x, 1f / fm.Size.y) : Vector2.one;
+            Assert.IsNotNull(_menuContainer);
+            Assert.IsNotNull(_menuButtonPrefab);
+
+            var items = new IItem[]
+            {
+                null, FieldItemsLibrary.TinyTower, FieldItemsLibrary.SmallTower, FieldItemsLibrary.MediumTower,
+                FieldItemsLibrary.LargeTower, FieldItemsLibrary.HugeTower
+#if EDITOR_MODE
+                , FieldItemsLibrary.Rock, FieldItemsLibrary.Emitter, FieldItemsLibrary.Target
+#endif
+            };
+
+            foreach (var item in items)
+            {
+                var bn = Instantiate(_menuButtonPrefab, _menuContainer);
+                var button = bn.GetComponent<Button>();
+                Assert.IsNotNull(button);
+                ApplyButton(button, item);
+            }
         }
 
-        private static Vector2 CalcItemPosition(Vector2 rawPosition)
+        private void ApplyButton(Button button, IItem item)
         {
-            var fm = GameModel.Instance.FieldModel;
-            if (fm == null) return Vector2.zero;
-
-            var markerSize = CalcMarkerSize();
-           return new Vector2(Step(markerSize.x, rawPosition.x), Step(markerSize.y, rawPosition.y))
-                - (Vector2.one - markerSize) * 0.5f;
-        }
-
-        private static float Step(float step, float length)
-        {
-            return Mathf.Clamp(Mathf.Floor(length / step) * step, 0.0f, length);
+            var label = button.GetComponentInChildren<Text>();
+            if (label != null)
+            {
+                if (item != null)
+                {
+                    var tower = item as ITower;
+                    label.text = item.Name + (tower != null ? string.Format(" ({0})", tower.BuyPrice) : "");
+                }
+                else
+                {
+                    label.text = "Delete";
+                }
+            }
+            button.onClick.AddListener(() => _selectedItem = item);
         }
     }
 }

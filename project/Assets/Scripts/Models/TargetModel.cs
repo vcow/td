@@ -2,5 +2,9 @@
 {
     public class TargetModel : IItem
     {
+        public string Name
+        {
+            get { return "Target"; }
+        }
     }
 }

@@ -2,6 +2,11 @@
 {
     public class TinnyTowerModel : ITower
     {
+        public string Name
+        {
+            get { return "Tinny Tower"; }
+        }
+
         public float BuyPrice
         {
             get { return 0; }

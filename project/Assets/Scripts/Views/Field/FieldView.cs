@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using Models;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.Events;
@@ -16,13 +18,15 @@ namespace Views.Field
 
         private bool _markerIsVisible = true;
 
+        private readonly Dictionary<Cell, GameObject> _cellsMap = new Dictionary<Cell, GameObject>();
+
         [Serializable]
         private class ClickFieldEvent : UnityEvent<Vector2>
         {
         }
 
         [SerializeField] private Transform _marker;
-        [SerializeField] private ClickFieldEvent _clickFieldEvent;
+        [SerializeField] private ClickFieldEvent _clickFieldEvent = new ClickFieldEvent();
 
         private void Start()
         {
@@ -34,10 +38,7 @@ namespace Views.Field
 
         private void OnDestroy()
         {
-            if (_clickFieldEvent != null)
-            {
-                _clickFieldEvent.RemoveAllListeners();
-            }
+            _clickFieldEvent.RemoveAllListeners();
         }
 
         private void OnMouseDown()
@@ -106,10 +107,69 @@ namespace Views.Field
             set
             {
                 if (_marker == null) return;
-                var sz = FieldSize;
-                var t = _marker.transform;
-                t.localPosition = new Vector3(value.x * sz.x, t.localPosition.y, value.y * sz.y);
+                SetNormalizedPosition(value, _marker.transform);
             }
+        }
+
+        private void SetNormalizedPosition(Vector2 pos, Transform trans)
+        {
+            var sz = FieldSize;
+            trans.localPosition = new Vector3(pos.x * sz.x, trans.localPosition.y, pos.y * sz.y);
+        }
+
+        /// <summary>
+        /// Создать представление для элемента сцены.
+        /// </summary>
+        /// <param name="cell">Ячейка, для которой создается представление.</param>
+        /// <param name="position">Позиция представления заданная как коэффициент по отношению к размерам поля.</param>
+        public void InstantiateItem(Cell cell, Vector2 position)
+        {
+            if (_cellsMap.ContainsKey(cell))
+            {
+                Debug.LogWarning("Cell {0} already have instance.");
+                return;
+            }
+            
+            GameObject prefab = null;
+            switch (cell.ItemType)
+            {
+                case ItemType.TinnyTower:
+                    prefab = Instantiate(GameModel.Instance.GameSettings.TinnyTowerPrefab);
+                    break;
+                case ItemType.SmallTower:
+                    prefab = Instantiate(GameModel.Instance.GameSettings.SmallTowerPrefab);
+                    break;
+                case ItemType.MediumTower:
+                    prefab = Instantiate(GameModel.Instance.GameSettings.MediumTowerPrefab);
+                    break;
+                case ItemType.LargeTower:
+                    prefab = Instantiate(GameModel.Instance.GameSettings.LargeTowerPrefab);
+                    break;
+                case ItemType.HugeTower:
+                    prefab = Instantiate(GameModel.Instance.GameSettings.HugeTowerPrefab);
+                    break;
+                case ItemType.Rock:
+                    prefab = Instantiate(GameModel.Instance.GameSettings.RockPrefab);
+                    break;
+                case ItemType.Emitter:
+                    prefab = Instantiate(GameModel.Instance.GameSettings.EmitterPrefab);
+                    break;
+                case ItemType.Target:
+                    prefab = Instantiate(GameModel.Instance.GameSettings.TargetPrefab);
+                    break;
+                default:
+                    throw new NotSupportedException();
+            }
+
+            if (prefab == null)
+            {
+                Debug.LogWarning("Prefab for this kind of item is not specified.");
+                return;
+            }
+
+            var instance = Instantiate(prefab, transform);
+            SetNormalizedPosition(position, instance.transform);
+            _cellsMap[cell] = instance;
         }
     }
 }

@@ -2,6 +2,11 @@
 {
     public class MediumTowerModel : ITower
     {
+        public string Name
+        {
+            get { return "Medium Tower"; }
+        }
+
         public float BuyPrice
         {
             get { return 0; }
