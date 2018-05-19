@@ -9,7 +9,23 @@ namespace Settings
     public class GameSettings : ScriptableObject
     {
         // TODO: Add game presets here
+
+        [Header("Towers")]
+        public GameObject TinnyTowerPrefab;
+        public GameObject SmallTowerPrefab;
+        public GameObject MediumTowerPrefab;
+        public GameObject LargeTowerPrefab;
+        public GameObject HugeTowerPrefab;
         
+        [Header("Landscape")]
+        public GameObject RockPrefab;
+        
+        [Header("Emitter")]
+        public GameObject EmitterPrefab;
+        
+        [Header("Target")]
+        public GameObject TargetPrefab;
+
 #if UNITY_EDITOR
         [MenuItem("Assets/Create/Game Settings", false, 10000)]
         private static void GetAndSelectSettingsInstance()
@@ -29,6 +45,7 @@ namespace Settings
             }))
             {
                 instance = CreateInstance<GameSettings>();
+
                 // TODO: Initialize here
 
                 AssetDatabase.CreateAsset(instance, "Assets/GameSettings.asset");

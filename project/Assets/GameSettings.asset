@@ -11,9 +11,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a20b1f6fd3a148539c7617ae392d5822, type: 3}
   m_Name: GameSettings
   m_EditorClassIdentifier: 
-  StoneFace: {fileID: 0}
-  ScissorsFace: {fileID: 0}
-  PaperFace: {fileID: 0}
-  Shirt: {fileID: 0}
-  Cheeting: 0
-  LuckPercent: 0.5
+  TinnyTowerPrefab: {fileID: 1492534903411626, guid: 56b58f094efce7d43b0139fc6309e5eb,
+    type: 2}
+  SmallTowerPrefab: {fileID: 1898453720272974, guid: 6a476e99df271a14e8454d66d92ec681,
+    type: 2}
+  MediumTowerPrefab: {fileID: 1213841497624120, guid: 461a4e473ef6832499748d23c8cce60a,
+    type: 2}
+  LargeTowerPrefab: {fileID: 1762282342162028, guid: 3bb0941449a34c148be06f0bd33a2d1a,
+    type: 2}
+  HugeTowerPrefab: {fileID: 1614674282709980, guid: 364155d09f40ffc47b4e02faabd15c76,
+    type: 2}
+  RockPrefab: {fileID: 1701906936880246, guid: 23efe5683faf01e46a9d85191152f2e4, type: 2}
+  EmitterPrefab: {fileID: 1264369458924120, guid: 1b8245af3dbff3b488317d0780c29ac5,
+    type: 2}
+  TargetPrefab: {fileID: 1275630997219534, guid: 55d1caa6e1caf9d45b1fb19384d37b5f,
+    type: 2}
