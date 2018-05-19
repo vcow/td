@@ -1,4 +1,5 @@
-﻿using Settings;
+﻿using System;
+using Settings;
 using UnityEngine;
 
 namespace Models
@@ -10,9 +11,26 @@ namespace Models
         private static GameModel _instance;
         private GameSettings _gameSettings;
 
+        private decimal _money;
+
         private GameModel()
         {
         }
+        
+        public decimal Money
+        {
+            get { return _money; }
+            set
+            {
+                if (value == _money) return;
+                _money = value;
+                if (MoneyChangedEvent != null)
+                {
+                    MoneyChangedEvent.Invoke(_money);
+                }
+            }
+        }
+        public event Action<decimal> MoneyChangedEvent; 
         
         public FieldModel FieldModel
         {
@@ -42,6 +60,8 @@ namespace Models
         private void ApplyGameSettings()
         {
             // TODO: Initialize game settings dependent fields.
+
+            Money = GameSettings.StartMoney;
         }
     }
 }

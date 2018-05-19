@@ -61,14 +61,14 @@ namespace Controllers.Scene
             var fm = GameModel.Instance.FieldModel;
             foreach (var cell in fm.Cells)
             {
-                Field.InstantiateItem(cell, Coord2Pos(cell.Position));
+                Field.InstantiateItem(cell, Coord2Pos(cell.Coordinate));
             }
         }
 
         protected static Vector2 Coord2Pos(Vector2Int coord)
         {
             var markerSize = CalcMarkerSize();
-            return new Vector2(coord.x * markerSize.x, coord.y * markerSize.y) + markerSize * 0.5f;
+            return new Vector2(coord.x * markerSize.x, coord.y * markerSize.y) + (markerSize - Vector2.one) * 0.5f;
         }
 
         protected static Vector2Int Pos2Coord(Vector2 pos)

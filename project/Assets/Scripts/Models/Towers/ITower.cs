@@ -4,8 +4,8 @@ namespace Models.Towers
 {
     public interface ITower : IItem
     {
-        float BuyPrice { get; }
-        float SellPrice { get; }
+        decimal BuyPrice { get; }
+        decimal SellPrice { get; }
         IWeapon Weapon { get; }
     }
 }

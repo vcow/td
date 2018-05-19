@@ -2,17 +2,22 @@
 {
     public class SmallTowerModel : ITower
     {
+        public ItemType Type
+        {
+            get { return ItemType.SmallTower; }
+        }
+
         public string Name
         {
             get { return "Small Tower"; }
         }
 
-        public float BuyPrice
+        public decimal BuyPrice
         {
             get { return 0; }
         }
         
-        public float SellPrice
+        public decimal SellPrice
         {
             get { return 0; }
         }

@@ -10,6 +10,9 @@ namespace Settings
     {
         // TODO: Add game presets here
 
+        [Header("Money")]
+        public decimal StartMoney = 1000;
+
         [Header("Towers")]
         public GameObject TinnyTowerPrefab;
         public GameObject SmallTowerPrefab;

@@ -18,7 +18,7 @@ namespace Views.Field
 
         private bool _markerIsVisible = true;
 
-        private readonly Dictionary<Cell, GameObject> _cellsMap = new Dictionary<Cell, GameObject>();
+        private readonly Dictionary<CellModel, GameObject> _cellsMap = new Dictionary<CellModel, GameObject>();
 
         [Serializable]
         private class ClickFieldEvent : UnityEvent<Vector2>
@@ -122,7 +122,7 @@ namespace Views.Field
         /// </summary>
         /// <param name="cell">Ячейка, для которой создается представление.</param>
         /// <param name="position">Позиция представления заданная как коэффициент по отношению к размерам поля.</param>
-        public void InstantiateItem(Cell cell, Vector2 position)
+        public void InstantiateItem(CellModel cell, Vector2 position)
         {
             if (_cellsMap.ContainsKey(cell))
             {
@@ -134,28 +134,28 @@ namespace Views.Field
             switch (cell.ItemType)
             {
                 case ItemType.TinnyTower:
-                    prefab = Instantiate(GameModel.Instance.GameSettings.TinnyTowerPrefab);
+                    prefab = GameModel.Instance.GameSettings.TinnyTowerPrefab;
                     break;
                 case ItemType.SmallTower:
-                    prefab = Instantiate(GameModel.Instance.GameSettings.SmallTowerPrefab);
+                    prefab = GameModel.Instance.GameSettings.SmallTowerPrefab;
                     break;
                 case ItemType.MediumTower:
-                    prefab = Instantiate(GameModel.Instance.GameSettings.MediumTowerPrefab);
+                    prefab = GameModel.Instance.GameSettings.MediumTowerPrefab;
                     break;
                 case ItemType.LargeTower:
-                    prefab = Instantiate(GameModel.Instance.GameSettings.LargeTowerPrefab);
+                    prefab = GameModel.Instance.GameSettings.LargeTowerPrefab;
                     break;
                 case ItemType.HugeTower:
-                    prefab = Instantiate(GameModel.Instance.GameSettings.HugeTowerPrefab);
+                    prefab = GameModel.Instance.GameSettings.HugeTowerPrefab;
                     break;
                 case ItemType.Rock:
-                    prefab = Instantiate(GameModel.Instance.GameSettings.RockPrefab);
+                    prefab = GameModel.Instance.GameSettings.RockPrefab;
                     break;
                 case ItemType.Emitter:
-                    prefab = Instantiate(GameModel.Instance.GameSettings.EmitterPrefab);
+                    prefab = GameModel.Instance.GameSettings.EmitterPrefab;
                     break;
                 case ItemType.Target:
-                    prefab = Instantiate(GameModel.Instance.GameSettings.TargetPrefab);
+                    prefab = GameModel.Instance.GameSettings.TargetPrefab;
                     break;
                 default:
                     throw new NotSupportedException();
@@ -170,6 +170,24 @@ namespace Views.Field
             var instance = Instantiate(prefab, transform);
             SetNormalizedPosition(position, instance.transform);
             _cellsMap[cell] = instance;
+        }
+
+        /// <summary>
+        /// Удалить представление для указанной ячейки.
+        /// </summary>
+        /// <param name="cell">Ячейка, для которой удаляется представление.</param>
+        /// <returns>Возвращает <code>true</code>, если удаление прошло успешно.</returns>
+        public bool ClearCell(CellModel cell)
+        {
+            GameObject instance;
+            if (_cellsMap.TryGetValue(cell, out instance))
+            {
+                _cellsMap.Remove(cell);
+                Destroy(instance);
+                return true;
+            }
+
+            return false;
         }
     }
 }

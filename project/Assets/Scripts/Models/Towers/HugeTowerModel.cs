@@ -2,17 +2,22 @@
 {
     public class HugeTowerModel : ITower
     {
+        public ItemType Type
+        {
+            get { return ItemType.HugeTower; }
+        }
+
         public string Name
         {
             get { return "Huge Tower"; }
         }
 
-        public float BuyPrice
+        public decimal BuyPrice
         {
             get { return 0; }
         }
 
-        public float SellPrice
+        public decimal SellPrice
         {
             get { return 0; }
         }
