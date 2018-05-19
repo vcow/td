@@ -1,4 +1,5 @@
-﻿using Settings;
+﻿using Models;
+using Settings;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.SceneManagement;
@@ -8,6 +9,7 @@ namespace Controllers.Scene
     /// <summary>
     /// Базовый класс контроллера сцены. Переводит игру на стартовую сцену, сообщает модели игровые настройки.
     /// </summary>
+    [DisallowMultipleComponent]
     public abstract class SceneControllerBase : MonoBehaviour
     {
         [SerializeField] private GameSettings _gameSettings;

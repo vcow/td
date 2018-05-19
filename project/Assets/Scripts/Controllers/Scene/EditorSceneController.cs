@@ -1,15 +1,16 @@
-﻿using System;
-using System.IO;
-using System.Xml.Serialization;
-using Models;
+﻿using Models;
 using UnityEngine;
+using UnityEngine.Assertions;
+using Views.Field;
 
 namespace Controllers.Scene
 {
     public class EditorSceneController : SceneControllerBase
     {
         private IItem _selectedItem;
-        
+
+        [SerializeField] private FieldView _field;
+
         protected override void Start()
         {
             base.Start();
@@ -20,31 +21,36 @@ namespace Controllers.Scene
 
         protected override void InitScene()
         {
-            // TODO: 
+            Assert.IsNotNull(_field);
+            _field.SetupMarker(CalcMarkerSize());
+            _field.MarkerPosition = CalcItemPosition(Vector2.zero);
         }
 
         public void OnClickField(Vector2 value)
         {
+            _field.MarkerPosition = CalcItemPosition(value);
             if (_selectedItem == null) return;
-            
-/*            Debug.Log(value);
+        }
 
-            var f = new FieldModel {Size = new Vector2Int(30, 30)};
-            f.Cells.Add(new Cell() {ItemType = ItemType.Rock, Position = new Vector2Int(0, 0)});
-            f.Cells.Add(new Cell() {ItemType = ItemType.TinnyTower, Position = new Vector2Int(1, 0)});
-            f.Cells.Add(new Cell() {ItemType = ItemType.TinnyTower, Position = new Vector2Int(2, 0)});
-            f.Cells.Add(new Cell() {ItemType = ItemType.SmallTower, Position = new Vector2Int(2, 2)});
+        private static Vector2 CalcMarkerSize()
+        {
+            var fm = GameModel.Instance.FieldModel;
+            return fm != null ? new Vector2(1f / fm.Size.x, 1f / fm.Size.y) : Vector2.one;
+        }
 
-            var s = new XmlSerializer(typeof(FieldModel),
-                new Type[]
-                {
-                    typeof(Cell),
-                    typeof(ItemType)
-                });
+        private static Vector2 CalcItemPosition(Vector2 rawPosition)
+        {
+            var fm = GameModel.Instance.FieldModel;
+            if (fm == null) return Vector2.zero;
 
-            var fs = new FileStream("C:/Work/research/location1.xml", FileMode.Create);
-            s.Serialize(fs, f);
-            fs.Close(); */
+            var markerSize = CalcMarkerSize();
+           return new Vector2(Step(markerSize.x, rawPosition.x), Step(markerSize.y, rawPosition.y))
+                - (Vector2.one - markerSize) * 0.5f;
+        }
+
+        private static float Step(float step, float length)
+        {
+            return Mathf.Clamp(Mathf.Floor(length / step) * step, 0.0f, length);
         }
     }
 }
