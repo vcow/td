@@ -1,10 +1,7 @@
 ﻿#define EDITOR_MODE
 
-using System;
 using System.IO;
-using System.Xml.Serialization;
 using Models;
-using Models.Enemies;
 using Models.Towers;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -193,20 +190,12 @@ namespace Controllers.Scene
 #if EDITOR_MODE
         private void OnSave()
         {
-            var serializer = new XmlSerializer(typeof(FieldModel), new Type[]
-            {
-                typeof(CellModel),
-                typeof(WaveModel),
-                typeof(ItemType),
-                typeof(EnemyType),
-                typeof(WaveEnemyEntry)
-            });
-
+            var serializer = new FieldSerializer();
             var fm = GameModel.Instance.FieldModel;
-            var savePath = Path.Combine(Application.persistentDataPath, string.Format("{0}.xml", fm.Name));
+            var savePath = Path.Combine(Application.persistentDataPath, string.Format(@"{0}.xml", fm.Name));
             if (File.Exists(savePath))
             {
-                Debug.LogWarning(string.Format("File {0} already exists.", savePath));
+                Debug.LogWarningFormat("File {0} already exists.", savePath);
                 return;
             }
             
@@ -214,7 +203,7 @@ namespace Controllers.Scene
             serializer.Serialize(fs, fm);
             fs.Close();
             
-            Debug.Log(string.Format("Field was saved to: {0}", savePath));
+            Debug.LogFormat("Field was saved to: {0}", savePath);
         }
 #endif
 

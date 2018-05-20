@@ -32,7 +32,7 @@ MonoBehaviour:
   MediumEnemiesInWave: 10
   LargeEnemiesInWave: 5
   NumberOfWaves: 3
-  AssetNames:
+  LevelAssetNames:
   - Levels/field_001.xml
   - Levels/field_002.xml
   - Levels/field_003.xml

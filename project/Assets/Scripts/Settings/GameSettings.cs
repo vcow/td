@@ -40,7 +40,7 @@ namespace Settings
         public int NumberOfWaves = 3;
 
         [Header("Levels")]
-        public string[] AssetNames;
+        public string[] LevelAssetNames;
 
 #if UNITY_EDITOR
         [MenuItem("Assets/Create/Game Settings", false, 10000)]
