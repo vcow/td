@@ -1,6 +1,8 @@
-﻿#define EDITOR_MODE
+﻿//#define EDITOR_MODE
 
+#if EDITOR_MODE
 using System.IO;
+#endif
 using Models;
 using Models.Towers;
 using UnityEngine;
@@ -49,13 +51,6 @@ namespace Controllers.Scene
 
         private void OnDestroy()
         {
-            if (!IsInitialized) return;
-            
-            foreach (var button in _menuContainer.GetComponentsInChildren<Button>())
-            {
-                button.onClick.RemoveAllListeners();
-            }
-
             if (_moneyText != null)
             {
                 GameModel.Instance.MoneyChangedEvent -= OnMoneyChanged;
@@ -87,13 +82,15 @@ namespace Controllers.Scene
                     // юзеру возвращается цена продажи.
 #if !EDITOR_MODE
                     var sourceCell = _sourceField.GetCellByCoord(coord);
-                    if (sourceCell == cell && sourceCell.ItemType == cell.ItemType)
+                    if (sourceCell.ItemType != cell.ItemType)
                     {
+                        Assert.IsTrue(sourceCell.ItemType == ItemType.Rock);
                         GameModel.Instance.Money += t.BuyPrice;
                     }
                     else
                     {
                         GameModel.Instance.Money += t.SellPrice;
+                        sourceCell.ItemType = ItemType.Rock;
                     }
 #endif
                         
@@ -178,13 +175,24 @@ namespace Controllers.Scene
             }
             
 #if EDITOR_MODE
-            var b = Instantiate(_menuButtonPrefab, _menuContainer);
-            var savedButton = b.GetComponent<Button>();
-            Assert.IsNotNull(savedButton);
-            var label = savedButton.GetComponentInChildren<Text>();
-            if (label != null) label.text = "Save";
-            savedButton.onClick.AddListener(OnSave);
+            var additionalButton = AddMenuButton("Save");
+            if (additionalButton != null) additionalButton.onClick.AddListener(OnSave);
+#else
+            var additionalButton = AddMenuButton("Play!");
+            if (additionalButton != null) additionalButton.onClick.AddListener(OnPlay);
+            additionalButton = AddMenuButton("Back to Start");
+            if (additionalButton != null) additionalButton.onClick.AddListener(OnBack);
 #endif
+        }
+
+        private Button AddMenuButton(string label)
+        {
+            var b = Instantiate(_menuButtonPrefab, _menuContainer);
+            var button = b.GetComponent<Button>();
+            Assert.IsNotNull(button);
+            var bnLabel = button.GetComponentInChildren<Text>();
+            if (bnLabel != null) bnLabel.text = label;
+            return button;
         }
         
 #if EDITOR_MODE
@@ -205,6 +213,16 @@ namespace Controllers.Scene
             
             Debug.LogFormat("Field was saved to: {0}", savePath);
         }
+#else
+        private void OnPlay()
+        {
+            
+        }
+
+        private void OnBack()
+        {
+            
+        }
 #endif
 
         private void ApplyButton(Button button, IItem item)
@@ -215,7 +233,11 @@ namespace Controllers.Scene
                 if (item != null)
                 {
                     var tower = item as ITower;
+#if EDITOR_MODE
+                    label.text = item.Name;
+#else
                     label.text = item.Name + (tower != null ? string.Format(" ({0})", tower.BuyPrice) : "");
+#endif
                 }
                 else
                 {

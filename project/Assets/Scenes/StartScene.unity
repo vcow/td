@@ -704,6 +704,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2083632617}
   - component: {fileID: 2083632618}
+  - component: {fileID: 2083632619}
   m_Layer: 5
   m_Name: LevelMenu
   m_TagString: Untagged
@@ -752,3 +753,14 @@ MonoBehaviour:
   m_Spacing: {x: 20, y: 20}
   m_Constraint: 0
   m_ConstraintCount: 2
+--- !u!114 &2083632619
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2083632616}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d16c204cfafe45128b39f74848aae7d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -41,14 +41,7 @@ namespace Controllers.Scene
 
         private void OnDestroy()
         {
-            if (!IsInitialized) return;
-            
             _playButton.onClick.RemoveListener(OnPlay);
-            
-            foreach (var button in _menuContainer.GetComponentsInChildren<Button>())
-            {
-                button.onClick.RemoveAllListeners();
-            }
         }
 
         private void OnPlay()
