@@ -55,10 +55,7 @@ namespace Controllers.Scene
 
         private void OnDestroy()
         {
-            if (_moneyText != null)
-            {
-                GameModel.Instance.MoneyChangedEvent -= OnMoneyChanged;
-            }
+            GameModel.Instance.MoneyChangedEvent -= OnMoneyChanged;
         }
 
         public override void OnClickField(Vector2 value)

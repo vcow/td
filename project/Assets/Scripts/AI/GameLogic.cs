@@ -161,6 +161,7 @@ namespace AI
             if (_spawnedEnemies.Contains(enemy))
             {
                 _spawnedEnemies.Remove(enemy);
+                GameModel.Instance.Money += enemy.Model.Price;
             }
             else
             {

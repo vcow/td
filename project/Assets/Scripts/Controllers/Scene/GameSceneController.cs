@@ -1,6 +1,8 @@
 ﻿using AI;
 using Models;
 using UnityEngine;
+using UnityEngine.Assertions;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Controllers.Scene
@@ -8,8 +10,12 @@ namespace Controllers.Scene
     public class GameSceneController : FieldSceneControllerBase , IGameController
     {
         private GameLogic _gameLogic;
+        private bool _isPaused;
         
         [SerializeField] private Text _moneyText;
+        [SerializeField] private Text _messageText;
+        [SerializeField] private Button _nextButton;
+        [SerializeField] private Transform _menu;
 
         public const string SceneName = "GameScene";
         
@@ -28,11 +34,24 @@ namespace Controllers.Scene
             
             _gameLogic = new GameLogic(this);
             _gameLogic.Start();
+            
+            Assert.IsNotNull(_menu);
+            Assert.IsNotNull(_messageText);
+            _menu.gameObject.SetActive(false);
+            
+            Assert.IsNotNull(_nextButton);
+            _nextButton.onClick.AddListener(OnNext);
+        }
+
+        private void OnNext()
+        {
+            SceneManager.sceneLoaded += OnSceneLoaded;
+            SceneManager.LoadScene(EditorSceneController.SceneName, LoadSceneMode.Single);
         }
 
         private void Update()
         {
-            if (_gameLogic != null)
+            if (_gameLogic != null && !_isPaused)
             {
                 _gameLogic.Update(Time.deltaTime);
             }
@@ -45,10 +64,7 @@ namespace Controllers.Scene
 
         private void OnDestroy()
         {
-            if (_moneyText != null)
-            {
-                GameModel.Instance.MoneyChangedEvent -= OnMoneyChanged;
-            }
+            GameModel.Instance.MoneyChangedEvent -= OnMoneyChanged;
         }
 
         /// <summary>
@@ -57,7 +73,7 @@ namespace Controllers.Scene
         /// <param name="value">Флаг, указывающий состояние паузы.</param>
         public void Pause(bool value)
         {
-            throw new System.NotImplementedException();
+            _isPaused = value;
         }
 
         /// <summary>
@@ -66,7 +82,10 @@ namespace Controllers.Scene
         /// </summary>
         public void Win(GameResult result)
         {
-            throw new System.NotImplementedException();
+            Pause(true);
+            
+            _menu.gameObject.SetActive(true);
+            _messageText.text = "YOU WIN!";
         }
 
         /// <summary>
@@ -75,7 +94,10 @@ namespace Controllers.Scene
         /// </summary>
         public void Lose(GameResult result)
         {
-            throw new System.NotImplementedException();
+            Pause(true);
+            
+            _menu.gameObject.SetActive(true);
+            _messageText.text = "YOU LOSE!";
         }
 
         /// <summary>
