@@ -1,6 +1,5 @@
 ﻿using System;
 using Settings;
-using UnityEngine;
 
 namespace Models
 {
@@ -38,7 +37,7 @@ namespace Models
         /// </summary>
         public FieldModel FieldModel
         {
-            get { return _fieldModel ?? (_fieldModel = new FieldModel {Size = new Vector2Int(20, 20)}); }
+            get { return _fieldModel ?? (_fieldModel = new FieldModelDefault()); }
             set { _fieldModel = value; }
         }
 

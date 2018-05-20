@@ -1,4 +1,4 @@
-﻿//#define EDITOR_MODE
+﻿#define EDITOR_MODE
 
 #if EDITOR_MODE
 using System.IO;
@@ -24,7 +24,7 @@ namespace Controllers.Scene
 #if !EDITOR_MODE
         private FieldModel _sourceField;
 #endif
-        
+
         public const string SceneName = "EditorScene";
 
         protected override void InitScene()
@@ -68,13 +68,13 @@ namespace Controllers.Scene
             var fm = GameModel.Instance.FieldModel;
             var coord = Pos2Coord(value);
             var cell = fm.GetCellByCoord(coord);
-            
+
             if (_selectedItem == null)
             {
                 // Delete
 
                 if (cell == null) return;
-                
+
                 Field.ClearCell(cell);
 
                 var t = cell.Item as ITower;
@@ -97,7 +97,7 @@ namespace Controllers.Scene
                         sourceCell.ItemType = ItemType.Rock;
                     }
 #endif
-                        
+
                     // Башни стоят на камнях, поэтому если удаляется башня, заменить ее на камень.
                     cell.ItemType = ItemType.Rock;
                     Field.InstantiateItem(cell, Coord2Pos(cell.Coordinate));
@@ -127,7 +127,7 @@ namespace Controllers.Scene
                     Debug.LogWarning("Tower can be placed on the rocks only.");
                     return;
                 }
-                
+
                 Field.ClearCell(cell);
                 cell.ItemType = tower.Type;
                 Field.InstantiateItem(cell, Coord2Pos(cell.Coordinate));
@@ -149,7 +149,7 @@ namespace Controllers.Scene
                     ItemType = _selectedItem.Type,
                     Coordinate = coord
                 };
-                
+
                 fm.AddCell(cell);
                 Field.InstantiateItem(cell, Coord2Pos(cell.Coordinate));
             }
@@ -177,7 +177,7 @@ namespace Controllers.Scene
                 Assert.IsNotNull(button);
                 ApplyButton(button, item);
             }
-            
+
 #if EDITOR_MODE
             var additionalButton = AddMenuButton("Save");
             if (additionalButton != null) additionalButton.onClick.AddListener(OnSave);
@@ -198,7 +198,7 @@ namespace Controllers.Scene
             if (bnLabel != null) bnLabel.text = label;
             return button;
         }
-        
+
 #if EDITOR_MODE
         private void OnSave()
         {
@@ -210,11 +210,11 @@ namespace Controllers.Scene
                 Debug.LogWarningFormat("File {0} already exists.", savePath);
                 return;
             }
-            
+
             var fs = new FileStream(savePath, FileMode.Create);
-            serializer.Serialize(fs, fm);
+            serializer.Serialize(fs, fm.Clone());
             fs.Close();
-            
+
             Debug.LogFormat("Field was saved to: {0}", savePath);
         }
 #else

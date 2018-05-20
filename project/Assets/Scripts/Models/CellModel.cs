@@ -21,6 +21,8 @@ namespace Models
     [XmlInclude(typeof(ItemType))]
     public class CellModel : ICloneable
     {
+        // TODO: Do not forget modify Clone()!
+        
         private ItemType _itemType = ItemType.Rock;
         private IItem _item = FieldItemsLibrary.Rock;
 

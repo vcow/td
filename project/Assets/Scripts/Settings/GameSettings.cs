@@ -1,10 +1,8 @@
-﻿
-using Boo.Lang;
+﻿using UnityEngine;
 #if UNITY_EDITOR
 using System.Linq;
 using UnityEditor;
 #endif
-using UnityEngine;
 
 namespace Settings
 {
@@ -38,6 +36,7 @@ namespace Settings
         public int MediumEnemiesInWave = 10;
         public int LargeEnemiesInWave = 5;
         public int NumberOfWaves = 3;
+        public float NextWaveDelayTime = 3;
 
         [Header("Levels")]
         public string[] LevelAssetNames;

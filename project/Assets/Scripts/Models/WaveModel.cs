@@ -10,20 +10,10 @@ namespace Models
     [XmlInclude(typeof(WaveEnemyEntry))]
     public class WaveModel : ICloneable
     {
+        // TODO: Do not forget modify Clone()!
+        
         [XmlElement] public float EmissionSpeed { get; set; }
         [XmlElement] public List<WaveEnemyEntry> Enemies;
-
-        public WaveModel()
-        {
-            var gs = GameModel.Instance.GameSettings;
-            EmissionSpeed = gs.EmissionSpeed;
-            Enemies = new List<WaveEnemyEntry>
-            {
-                new WaveEnemyEntry {Type = EnemyType.Small, EnemiesCount = gs.SmallEnemiesInWave},
-                new WaveEnemyEntry {Type = EnemyType.Medium, EnemiesCount = gs.MediumEnemiesInWave},
-                new WaveEnemyEntry {Type = EnemyType.Large, EnemiesCount = gs.LargeEnemiesInWave}
-            };
-        }
 
         object ICloneable.Clone()
         {

@@ -11,25 +11,13 @@ namespace Models
     [XmlInclude(typeof(WaveModel))]
     public class FieldModel : ICloneable
     {
-        private static int _fieldCtr = 1;
-
+        // TODO: Do not forget modify Clone()!
+        
         [XmlElement] public string Name { get; set; }
         [XmlElement] public int TargetHealth { get; set; }
         [XmlElement] public Vector2Int Size { get; set; }
         [XmlArray] public List<CellModel> Cells = new List<CellModel>();
-        [XmlArray] public List<WaveModel> Waves;
-
-        public FieldModel()
-        {
-            var gs = GameModel.Instance.GameSettings;
-            Name = string.Format("Field {0}", _fieldCtr++);
-            TargetHealth = gs.TargetHealth;
-            Waves = new List<WaveModel>();
-            for (var i = 0; i < gs.NumberOfWaves; ++i)
-            {
-                Waves.Add(new WaveModel());
-            }
-        }
+        [XmlArray] public List<WaveModel> Waves = new List<WaveModel>();
 
         object ICloneable.Clone()
         {
@@ -46,7 +34,7 @@ namespace Models
             var waves = new List<WaveModel>(Waves.Count);
             Cells.ForEach(cell => cells.Add(cell.Clone()));
             Waves.ForEach(wave => waves.Add(wave.Clone()));
-            return new FieldModel {Size = Size, TargetHealth = TargetHealth, Cells = cells, Waves = waves};
+            return new FieldModel {Name = Name, Size = Size, TargetHealth = TargetHealth, Cells = cells, Waves = waves};
         }
 
         /// <summary>
