@@ -111,7 +111,12 @@ namespace Views.Field
             }
         }
 
-        private void SetNormalizedPosition(Vector2 pos, Transform trans)
+        /// <summary>
+        /// Применяет к указанному объекту трансформацию, заданную как коэффициент к размерам поля.
+        /// </summary>
+        /// <param name="pos">Нормализованная позиция.</param>
+        /// <param name="trans">Объект, к которому будет применена транформация.</param>
+        public void SetNormalizedPosition(Vector2 pos, Transform trans)
         {
             var sz = FieldSize;
             trans.localPosition = new Vector3(pos.x * sz.x, trans.localPosition.y, pos.y * sz.y);

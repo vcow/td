@@ -19,6 +19,11 @@ namespace Settings
         public GameObject MediumTowerPrefab;
         public GameObject LargeTowerPrefab;
         public GameObject HugeTowerPrefab;
+
+        [Header("Enemies")]
+        public GameObject SmallEnemyPrefab;
+        public GameObject MediumEnemyPrefab;
+        public GameObject LargeEnemyPrefab;
         
         [Header("Landscape")]
         public GameObject RockPrefab;

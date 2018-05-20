@@ -77,5 +77,13 @@ namespace Controllers.Scene
         {
             throw new System.NotImplementedException();
         }
+
+        void IGameController.DebugMarkCell(Vector2Int coordinate)
+        {
+            var marker = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            marker.transform.localScale = Vector3.one * 0.1f;
+            marker.transform.SetParent(Field.transform, false);
+            Field.SetNormalizedPosition(Coord2Pos(coordinate), marker.transform);
+        }
     }
 }

@@ -21,6 +21,12 @@ MonoBehaviour:
     type: 2}
   HugeTowerPrefab: {fileID: 1614674282709980, guid: 364155d09f40ffc47b4e02faabd15c76,
     type: 2}
+  SmallEnemyPrefab: {fileID: 1207045021649046, guid: 12e05a073847c5046b821464a7ece220,
+    type: 2}
+  MediumEnemyPrefab: {fileID: 1123244265501334, guid: 7218317e89a0aee4781c8ea500c4d816,
+    type: 2}
+  LargeEnemyPrefab: {fileID: 1358350290119360, guid: 940d189d821306340b6f54f21e95ad66,
+    type: 2}
   RockPrefab: {fileID: 1701906936880246, guid: 23efe5683faf01e46a9d85191152f2e4, type: 2}
   EmitterPrefab: {fileID: 1264369458924120, guid: 1b8245af3dbff3b488317d0780c29ac5,
     type: 2}
@@ -32,6 +38,7 @@ MonoBehaviour:
   MediumEnemiesInWave: 10
   LargeEnemiesInWave: 5
   NumberOfWaves: 3
+  NextWaveDelayTime: 3
   LevelAssetNames:
   - Levels/field_001.xml
   - Levels/field_002.xml

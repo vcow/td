@@ -1,4 +1,4 @@
-﻿#define EDITOR_MODE
+﻿//#define EDITOR_MODE
 
 #if EDITOR_MODE
 using System.IO;

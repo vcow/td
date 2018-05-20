@@ -22,8 +22,9 @@ namespace AI
         private IEnumerator<WaveModel> _waveIterator;
 
         private readonly List<WaveLogic> _workingWaves = new List<WaveLogic>();
-
         private readonly List<EnemyLogic> _spawnedEnemies = new List<EnemyLogic>();
+
+        private IEnumerable<Vector2Int> _path;
 
         public GameLogic(IGameController controller)
         {
@@ -34,6 +35,30 @@ namespace AI
         {
             _field = GameModel.Instance.FieldModel;
             Assert.IsNotNull(_field);
+
+            var emitter = _field.Cells.FirstOrDefault(cell => cell.ItemType == ItemType.Emitter);
+            var target = _field.Cells.FirstOrDefault(cell => cell.ItemType == ItemType.Target);
+
+            if (emitter == null || target == null)
+            {
+                Debug.LogWarning("Current field has no any Emitters or Tragets.");
+                _controller.Lose(GetResult());
+                return;
+            }
+            
+            var pf = new PathFinder();
+            _path = pf.CalcPath(emitter, target);
+            if (!_path.Any())
+            {
+                Debug.LogWarning("Current field has no path from Emitter or Traget.");
+                _controller.Lose(GetResult());
+                return;
+            }
+
+            foreach (var p in _path)
+            {
+                _controller.DebugMarkCell(p);
+            }
 
             _waveIterator = _field.Waves.GetEnumerator();
             ApplyNextWave();

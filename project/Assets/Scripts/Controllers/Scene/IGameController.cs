@@ -1,4 +1,5 @@
 ﻿using AI;
+using UnityEngine;
 
 namespace Controllers.Scene
 {
@@ -7,5 +8,7 @@ namespace Controllers.Scene
         void Pause(bool value);
         void Win(GameResult result);
         void Lose(GameResult result);
+
+        void DebugMarkCell(Vector2Int coordinate);
     }
 }
