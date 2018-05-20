@@ -29,7 +29,7 @@ namespace Views.Enemies
             }
             else
             {
-                transform.localPosition = Logic.GetPosition();
+                _transform.localPosition = Logic.GetPosition();
             }
         }
 
