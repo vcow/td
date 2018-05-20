@@ -97,6 +97,15 @@ namespace Controllers.Scene
             Field.InstantiateEnemy(enemy);
         }
 
+        /// <summary>
+        /// Создать выстрел.
+        /// </summary>
+        /// <param name="shot">Выстрел.</param>
+        public void AddShot(ShotLogic shot)
+        {
+            Field.InstantiateShot(shot);
+        }
+
         void IGameController.DebugMarkCell(Vector2Int coord)
         {
             var marker = GameObject.CreatePrimitive(PrimitiveType.Sphere);

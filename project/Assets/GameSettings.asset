@@ -27,18 +27,19 @@ MonoBehaviour:
     type: 2}
   LargeEnemyPrefab: {fileID: 1358350290119360, guid: 940d189d821306340b6f54f21e95ad66,
     type: 2}
+  Bullet: {fileID: 1176376385841790, guid: 450f4e782b3f066469b881a9e5372c90, type: 2}
   RockPrefab: {fileID: 1701906936880246, guid: 23efe5683faf01e46a9d85191152f2e4, type: 2}
   EmitterPrefab: {fileID: 1264369458924120, guid: 1b8245af3dbff3b488317d0780c29ac5,
     type: 2}
   TargetPrefab: {fileID: 1275630997219534, guid: 55d1caa6e1caf9d45b1fb19384d37b5f,
     type: 2}
   TargetHealth: 3
-  EmissionSpeed: 5
-  SmallEnemiesInWave: 20
-  MediumEnemiesInWave: 10
-  LargeEnemiesInWave: 5
+  EmissionSpeed: 2
+  SmallEnemiesInWave: 3
+  MediumEnemiesInWave: 2
+  LargeEnemiesInWave: 1
   NumberOfWaves: 3
-  NextWaveDelayTime: 3
+  NextWaveDelayTime: 10
   LevelAssetNames:
   - Levels/field_001.xml
   - Levels/field_002.xml

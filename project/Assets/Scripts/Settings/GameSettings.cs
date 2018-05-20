@@ -25,6 +25,9 @@ namespace Settings
         public GameObject MediumEnemyPrefab;
         public GameObject LargeEnemyPrefab;
         
+        [Header("Bullets")]
+        public GameObject Bullet;
+        
         [Header("Landscape")]
         public GameObject RockPrefab;
         

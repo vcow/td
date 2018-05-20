@@ -79,10 +79,10 @@ namespace AI
             });
 
             _waveIterator = fm.Waves.GetEnumerator();
-            ApplyNextWave();
+            ApplyNextWave(true);
         }
 
-        private void ApplyNextWave()
+        private void ApplyNextWave(bool immediate = false)
         {
             Assert.IsNotNull(_waveIterator);
 
@@ -93,7 +93,14 @@ namespace AI
                 var wave = _waveIterator.Current;
                 if (wave != null && wave.Enemies.Any())
                 {
-                    DelayCall(GameModel.Instance.GameSettings.NextWaveDelayTime, () => StartWave(wave));
+                    if (immediate)
+                    {
+                        StartWave(wave);
+                    }
+                    else
+                    {
+                        DelayCall(GameModel.Instance.GameSettings.NextWaveDelayTime, () => StartWave(wave));
+                    }
                 }
                 else
                 {
@@ -142,7 +149,7 @@ namespace AI
         /// <param name="shot">Добавляемый выстрел.</param>
         public void Shoot(ShotLogic shot)
         {
-            throw new System.NotImplementedException();
+            _controller.AddShot(shot);
         }
 
         /// <summary>

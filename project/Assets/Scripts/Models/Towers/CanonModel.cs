@@ -8,15 +8,15 @@
         }
         public int Damage
         {
-            get { return 5; }
+            get { return 10; }
         }
         public float RechargeTime
         {
-            get { return 1.5f; }
+            get { return 3f; }
         }
         public float BulletSpeed
         {
-            get { return 20f; }
+            get { return 3f; }
         }
     }
 }

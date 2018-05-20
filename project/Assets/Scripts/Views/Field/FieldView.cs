@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.Events;
 using Views.Enemies;
+using Views.Towers;
 
 namespace Views.Field
 {
@@ -169,6 +170,36 @@ namespace Views.Field
             else
             {
                 Debug.LogWarning("Enemy view must have behaviour of EnemyView class.");
+            }
+        }
+
+        /// <summary>
+        /// Создать представление выстрела.
+        /// </summary>
+        /// <param name="shot">Выстрел.</param>
+        public void InstantiateShot(ShotLogic shot)
+        {
+            GameObject prefab = null;
+            
+            // TODO: Customize shot here.
+
+            prefab = GameModel.Instance.GameSettings.Bullet;
+
+            if (prefab == null)
+            {
+                Debug.LogWarning("Prefab for this kind of bullet is not specified.");
+                return;
+            }
+
+            var instance = Instantiate(prefab, transform);
+            var shotView = instance.GetComponent<ShotView>();
+            if (shotView != null)
+            {
+                shotView.Logic = shot;
+            }
+            else
+            {
+                Debug.LogWarning("Shot view must have behaviour of ShotView class.");
             }
         }
 

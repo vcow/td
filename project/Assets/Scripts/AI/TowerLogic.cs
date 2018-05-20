@@ -18,7 +18,7 @@ namespace AI
 
         private readonly float _sqrRadius;
         private readonly List<EnemyLogic> _accessibleEnemies = new List<EnemyLogic>();
-        
+
         private readonly List<ShotLogic> _shots = new List<ShotLogic>();
 
         public TowerLogic(ITower tower, Vector3 position, float cellSize,
@@ -29,11 +29,12 @@ namespace AI
             _cellSize = cellSize;
             _enemies = enemies;
             _gameLogic = gameLogic;
-            
+
             Assert.IsNotNull(_tower.Weapon);
-            _sqrRadius = _tower.Weapon.Radius * _tower.Weapon.Radius;
+            _sqrRadius = _tower.Weapon.Radius * cellSize;
+            _sqrRadius *= _sqrRadius;
         }
-        
+
         public ITower Model
         {
             get { return _tower; }
@@ -52,12 +53,12 @@ namespace AI
                     _shots.RemoveAt(i);
                 }
             }
-            
+
             if (_isRecharged) return;
-            
+
             GetAccessibleEnemies();
             if (!_accessibleEnemies.Any()) return;
-            
+
             Attack(_accessibleEnemies[Random.Range(0, _accessibleEnemies.Count - 1)]);
         }
 

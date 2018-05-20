@@ -4,7 +4,7 @@
     {
         public int Radius
         {
-            get { return 1; }
+            get { return 2; }
         }
         public int Damage
         {
@@ -12,11 +12,11 @@
         }
         public float RechargeTime
         {
-            get { return 0.3f; }
+            get { return 0.5f; }
         }
         public float BulletSpeed
         {
-            get { return 30f; }
+            get { return 5f; }
         }
     }
 }

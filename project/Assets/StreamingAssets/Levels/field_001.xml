@@ -797,47 +797,47 @@
     <Wave>
       <Enemies>
         <Type>Small</Type>
-        <EnemiesCount>20</EnemiesCount>
+        <EnemiesCount>3</EnemiesCount>
       </Enemies>
       <Enemies>
         <Type>Medium</Type>
-        <EnemiesCount>10</EnemiesCount>
+        <EnemiesCount>2</EnemiesCount>
       </Enemies>
       <Enemies>
         <Type>Large</Type>
-        <EnemiesCount>5</EnemiesCount>
+        <EnemiesCount>1</EnemiesCount>
       </Enemies>
-      <EmissionSpeed>5</EmissionSpeed>
+      <EmissionSpeed>1</EmissionSpeed>
     </Wave>
     <Wave>
       <Enemies>
         <Type>Small</Type>
-        <EnemiesCount>20</EnemiesCount>
+        <EnemiesCount>3</EnemiesCount>
       </Enemies>
       <Enemies>
         <Type>Medium</Type>
-        <EnemiesCount>10</EnemiesCount>
+        <EnemiesCount>2</EnemiesCount>
       </Enemies>
       <Enemies>
         <Type>Large</Type>
-        <EnemiesCount>5</EnemiesCount>
+        <EnemiesCount>1</EnemiesCount>
       </Enemies>
-      <EmissionSpeed>5</EmissionSpeed>
+      <EmissionSpeed>2</EmissionSpeed>
     </Wave>
     <Wave>
       <Enemies>
         <Type>Small</Type>
-        <EnemiesCount>20</EnemiesCount>
+        <EnemiesCount>3</EnemiesCount>
       </Enemies>
       <Enemies>
         <Type>Medium</Type>
-        <EnemiesCount>10</EnemiesCount>
+        <EnemiesCount>2</EnemiesCount>
       </Enemies>
       <Enemies>
         <Type>Large</Type>
-        <EnemiesCount>5</EnemiesCount>
+        <EnemiesCount>2</EnemiesCount>
       </Enemies>
-      <EmissionSpeed>5</EmissionSpeed>
+      <EmissionSpeed>3</EmissionSpeed>
     </Wave>
   </Waves>
   <Name>Field 1</Name>

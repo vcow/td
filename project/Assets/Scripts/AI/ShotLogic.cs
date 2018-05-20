@@ -23,7 +23,7 @@ namespace AI
             var to = target.GetPosition();
 
             _totalTime = 0;
-            _calcTime = Vector3.Magnitude(to - _position) / cellSize * weapon.BulletSpeed;
+            _calcTime = Vector3.Magnitude(to - _position) / cellSize / weapon.BulletSpeed;
             _targetPosition = _target.GetPosition(_calcTime);
         }
 
@@ -47,6 +47,7 @@ namespace AI
                 IsHit = true;
                 BulletPosition = _targetPosition;
                 _target.Hit(_weapon.Damage);
+                return;
             }
 
             BulletPosition = Vector3.Lerp(_position, _targetPosition, Mathf.Clamp01(_totalTime / _calcTime));

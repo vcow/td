@@ -12,6 +12,7 @@ namespace Controllers.Scene
         Vector3 Coord2World(Vector2Int coord);
 
         void AddEnemy(EnemyLogic enemy);
+        void AddShot(ShotLogic shot);
 
         void DebugMarkCell(Vector2Int coord);
     }

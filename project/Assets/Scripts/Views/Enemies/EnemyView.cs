@@ -4,6 +4,7 @@ using UnityEngine.Assertions;
 
 namespace Views.Enemies
 {
+    [DisallowMultipleComponent]
     public class EnemyView : MonoBehaviour
     {
         private Transform _transform;
