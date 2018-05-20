@@ -9,6 +9,10 @@ namespace Controllers.Scene
         void Win(GameResult result);
         void Lose(GameResult result);
 
-        void DebugMarkCell(Vector2Int coordinate);
+        Vector3 Coord2World(Vector2Int coord);
+
+        void AddEnemy(EnemyLogic enemy);
+
+        void DebugMarkCell(Vector2Int coord);
     }
 }

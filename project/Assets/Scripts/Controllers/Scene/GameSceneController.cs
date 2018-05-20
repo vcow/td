@@ -78,12 +78,31 @@ namespace Controllers.Scene
             throw new System.NotImplementedException();
         }
 
-        void IGameController.DebugMarkCell(Vector2Int coordinate)
+        /// <summary>
+        /// Преобразует позицию на игровом поле в мировые координаты.
+        /// </summary>
+        /// <param name="coord">Позиция на игровом поле.</param>
+        /// <returns>Мировые координаты.</returns>
+        public Vector3 Coord2World(Vector2Int coord)
+        {
+            return Field.Pos2World(Coord2Pos(coord));
+        }
+
+        /// <summary>
+        /// Создать врага.
+        /// </summary>
+        /// <param name="enemy">Логика создаваемого врага.</param>
+        public void AddEnemy(EnemyLogic enemy)
+        {
+            Field.InstantiateEnemy(enemy);
+        }
+
+        void IGameController.DebugMarkCell(Vector2Int coord)
         {
             var marker = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            marker.transform.localScale = Vector3.one * 0.1f;
             marker.transform.SetParent(Field.transform, false);
-            Field.SetNormalizedPosition(Coord2Pos(coordinate), marker.transform);
+            marker.transform.localScale = Vector3.one * 0.1f;
+            marker.transform.localPosition = Field.Pos2World(Coord2Pos(coord));
         }
     }
 }

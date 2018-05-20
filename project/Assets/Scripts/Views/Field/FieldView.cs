@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using AI;
 using Models;
+using Models.Enemies;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.Events;
+using Views.Enemies;
 
 namespace Views.Field
 {
@@ -20,6 +23,8 @@ namespace Views.Field
 
         private readonly Dictionary<CellModel, GameObject> _cellsMap = new Dictionary<CellModel, GameObject>();
 
+        private Transform _transform;
+
         [Serializable]
         private class ClickFieldEvent : UnityEvent<Vector2>
         {
@@ -27,6 +32,11 @@ namespace Views.Field
 
         [SerializeField] private Transform _marker;
         [SerializeField] private ClickFieldEvent _clickFieldEvent = new ClickFieldEvent();
+
+        private void Awake()
+        {
+            _transform = transform;
+        }
 
         private void Start()
         {
@@ -107,19 +117,59 @@ namespace Views.Field
             set
             {
                 if (_marker == null) return;
-                SetNormalizedPosition(value, _marker.transform);
+                _marker.transform.localPosition = Pos2World(value) + new Vector3(0, 0.005f, 0);
             }
         }
 
         /// <summary>
-        /// Применяет к указанному объекту трансформацию, заданную как коэффициент к размерам поля.
+        /// Преобразовать позицию, заданную как коэффициент в мировые координаты.
         /// </summary>
         /// <param name="pos">Нормализованная позиция.</param>
-        /// <param name="trans">Объект, к которому будет применена транформация.</param>
-        public void SetNormalizedPosition(Vector2 pos, Transform trans)
+        /// <returns>Мировые координаты.</returns>
+        public Vector3 Pos2World(Vector2 pos)
         {
             var sz = FieldSize;
-            trans.localPosition = new Vector3(pos.x * sz.x, trans.localPosition.y, pos.y * sz.y);
+            return new Vector3(pos.x * sz.x, _transform.position.y, pos.y * sz.y);
+        }
+
+        /// <summary>
+        /// Создать представление врага.
+        /// </summary>
+        /// <param name="enemy">Логика создаваемого врага.</param>
+        public void InstantiateEnemy(EnemyLogic enemy)
+        {
+            GameObject prefab = null;
+            switch (enemy.Model.Type)
+            {
+                case EnemyType.Small:
+                    prefab = GameModel.Instance.GameSettings.SmallEnemyPrefab;
+                    break;
+                case EnemyType.Medium:
+                    prefab = GameModel.Instance.GameSettings.MediumEnemyPrefab;
+                    break;
+                case EnemyType.Large:
+                    prefab = GameModel.Instance.GameSettings.LargeEnemyPrefab;
+                    break;
+                default:
+                    throw new NotSupportedException();
+            }
+
+            if (prefab == null)
+            {
+                Debug.LogWarning("Prefab for this kind of enemy is not specified.");
+                return;
+            }
+
+            var instance = Instantiate(prefab, transform);
+            var enemyView = instance.GetComponent<EnemyView>();
+            if (enemyView != null)
+            {
+                enemyView.Logic = enemy;
+            }
+            else
+            {
+                Debug.LogWarning("Enemy view must have behaviour of EnemyView class.");
+            }
         }
 
         /// <summary>
@@ -173,7 +223,7 @@ namespace Views.Field
             }
 
             var instance = Instantiate(prefab, transform);
-            SetNormalizedPosition(position, instance.transform);
+            instance.transform.localPosition = Pos2World(position);
             _cellsMap[cell] = instance;
         }
 

@@ -24,7 +24,8 @@ namespace AI
         private readonly List<WaveLogic> _workingWaves = new List<WaveLogic>();
         private readonly List<EnemyLogic> _spawnedEnemies = new List<EnemyLogic>();
 
-        private IEnumerable<Vector2Int> _path;
+        private Vector3[] _path;
+        private int _targetHealth;
 
         public GameLogic(IGameController controller)
         {
@@ -36,6 +37,7 @@ namespace AI
             _field = GameModel.Instance.FieldModel;
             Assert.IsNotNull(_field);
 
+            _targetHealth = _field.TargetHealth;
             var emitter = _field.Cells.FirstOrDefault(cell => cell.ItemType == ItemType.Emitter);
             var target = _field.Cells.FirstOrDefault(cell => cell.ItemType == ItemType.Target);
 
@@ -47,17 +49,20 @@ namespace AI
             }
             
             var pf = new PathFinder();
-            _path = pf.CalcPath(emitter, target);
-            if (!_path.Any())
+            var coordPath = pf.CalcPath(emitter, target);
+            var vector2Ints = coordPath as Vector2Int[] ?? coordPath.ToArray();
+            if (!vector2Ints.Any())
             {
                 Debug.LogWarning("Current field has no path from Emitter or Traget.");
                 _controller.Lose(GetResult());
                 return;
             }
 
-            foreach (var p in _path)
+            _path = new Vector3[vector2Ints.Length];
+            for (var i = 0; i < vector2Ints.Length; ++i)
             {
-                _controller.DebugMarkCell(p);
+                _controller.DebugMarkCell(vector2Ints[i]);
+                _path[i] = _controller.Coord2World(vector2Ints[i]);
             }
 
             _waveIterator = _field.Waves.GetEnumerator();
@@ -113,7 +118,47 @@ namespace AI
         /// <param name="type">Тип порождаемого врага.</param>
         public void SpawnEnemy(EnemyType type)
         {
-            Debug.LogFormat("-- Spawned {0}", type);
+            var enemy = new EnemyLogic(EnemiesLibrary.GetEnemyByType(type), _path, this);
+            _spawnedEnemies.Add(enemy);
+            _controller.AddEnemy(enemy);
+        }
+
+        /// <summary>
+        /// Враг умер.
+        /// </summary>
+        /// <param name="enemy">Умерший враг.</param>
+        public void EnemyDie(EnemyLogic enemy)
+        {
+            if (_spawnedEnemies.Contains(enemy))
+            {
+                _spawnedEnemies.Remove(enemy);
+            }
+            else
+            {
+                Debug.LogWarning("Enemy already was destroyed.");
+            }
+
+            if (_targetHealth > 0 && !_spawnedEnemies.Any() && !_workingWaves.Any() && _waveIterator == null)
+            {
+                // Закончились враги и волны.
+                _controller.Win(GetResult());
+            }
+        }
+
+        /// <summary>
+        /// Враг достиг цели.
+        /// </summary>
+        /// <param name="hitPoints">Урон.</param>
+        public void HitTarget(int hitPoints)
+        {
+            _targetHealth -= hitPoints;
+            Debug.LogFormat("--- Hit by {0} points, health became {1}.", hitPoints, _targetHealth);
+            
+            if (_targetHealth <= 0)
+            {
+                _controller.Lose(GetResult());
+            }
+            
         }
 
         private IEnumerator StartWaveCoroutine(float delay, WaveModel wave)
@@ -124,7 +169,7 @@ namespace AI
 
         private void StartWave(WaveModel wave)
         {
-            Debug.Log("--- Start enemy wave.");
+            Debug.Log("+++ Start enemy wave!");
             var waveLogic = new WaveLogic(wave, this);
             _workingWaves.Add(waveLogic);
         }
