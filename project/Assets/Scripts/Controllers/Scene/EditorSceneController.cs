@@ -3,10 +3,12 @@
 #if EDITOR_MODE
 using System.IO;
 #endif
+using System.Linq;
 using Models;
 using Models.Towers;
 using UnityEngine;
 using UnityEngine.Assertions;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Controllers.Scene
@@ -22,6 +24,8 @@ namespace Controllers.Scene
 #if !EDITOR_MODE
         private FieldModel _sourceField;
 #endif
+        
+        public const string SceneName = "EditorScene";
 
         protected override void InitScene()
         {
@@ -216,12 +220,25 @@ namespace Controllers.Scene
 #else
         private void OnPlay()
         {
-            
+            var fm = GameModel.Instance.FieldModel;
+            if (fm.Cells.Any(cell => cell.ItemType == ItemType.Emitter)
+                && fm.Cells.Any(cell => cell.ItemType == ItemType.Target))
+            {
+                // TODO: Save start settings
+
+                SceneManager.sceneLoaded += OnSceneLoaded;
+                SceneManager.LoadScene(GameSceneController.SceneName, LoadSceneMode.Single);
+            }
+            else
+            {
+                Debug.LogWarning("Field must have at least one Emitter and one Target.");
+            }
         }
 
         private void OnBack()
         {
-            
+            SceneManager.sceneLoaded += OnSceneLoaded;
+            SceneManager.LoadScene(StartSceneController.SceneName, LoadSceneMode.Single);
         }
 #endif
 

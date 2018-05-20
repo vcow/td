@@ -15,17 +15,16 @@ namespace Controllers.Scene
     {
         private IEnumerator<string> _pathIterator;
         private readonly List<FieldModel> _levels = new List<FieldModel>();
+        private bool _ready;
 
         [SerializeField] private Button _playButton;
         [SerializeField] private Transform _menuContainer;
         [SerializeField] private GameObject _levelButtonPrefab;
 
-        private const string EditorSceneName = "EditorScene";
+        public const string SceneName = "StartScene";
 
         protected override void Start()
         {
-            if (IsInitialized) return;
-
             InitScene();
             IsInitialized = true;
         }
@@ -46,10 +45,12 @@ namespace Controllers.Scene
 
         private void OnPlay()
         {
+            if (!_ready) return;
+            
             // TODO: Save start settings
 
             SceneManager.sceneLoaded += OnSceneLoaded;
-            SceneManager.LoadScene(EditorSceneName, LoadSceneMode.Single);
+            SceneManager.LoadScene(EditorSceneController.SceneName, LoadSceneMode.Single);
         }
 
         private void LoadLevel()
@@ -63,7 +64,10 @@ namespace Controllers.Scene
                 _pathIterator.Dispose();
                 _pathIterator = null;
 
+                GameModel.Instance.FieldModel = _levels.FirstOrDefault();
+
                 CreateMenu();
+                _ready = true;
             }
         }
 
@@ -108,6 +112,22 @@ namespace Controllers.Scene
                 Assert.IsNotNull(button);
                 ApplyButton(button, field);
             });
+
+            var additionalButton = AddMenuButton("Empty");
+            if (additionalButton != null)
+            {
+                additionalButton.onClick.AddListener(() => GameModel.Instance.FieldModel = null);
+            }
+        }
+        
+        private Button AddMenuButton(string label)
+        {
+            var b = Instantiate(_levelButtonPrefab, _menuContainer);
+            var button = b.GetComponent<Button>();
+            Assert.IsNotNull(button);
+            var bnLabel = button.GetComponentInChildren<Text>();
+            if (bnLabel != null) bnLabel.text = label;
+            return button;
         }
         
         private void ApplyButton(Button button, FieldModel field)

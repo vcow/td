@@ -33,6 +33,9 @@ namespace Models
 
         public event Action<decimal> MoneyChangedEvent;
 
+        /// <summary>
+        /// Текущая выбраннная локация.
+        /// </summary>
         public FieldModel FieldModel
         {
             get { return _fieldModel ?? (_fieldModel = new FieldModel {Size = new Vector2Int(20, 20)}); }
