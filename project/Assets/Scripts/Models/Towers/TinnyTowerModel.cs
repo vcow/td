@@ -24,7 +24,7 @@
 
         public IWeapon Weapon
         {
-            get { return null; }
+            get { return WeaponsLibrary.Pistol; }
         }
     }
 }

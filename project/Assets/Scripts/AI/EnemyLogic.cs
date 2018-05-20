@@ -49,6 +49,24 @@ namespace AI
             }
         }
 
+        /// <summary>
+        /// Попадание по врагу.
+        /// </summary>
+        /// <param name="hitPoints">Нанесенный ущерб.</param>
+        public void Hit(int hitPoints)
+        {
+            var isLive = _health > 0;
+            _health -= hitPoints;
+            if (isLive && _health <= 0)
+            {
+                // Fail
+                _gameLogic.EnemyDie(this);
+            }
+        }
+
+        /// <summary>
+        /// Текущее значение жизни.
+        /// </summary>
         public int Health
         {
             get { return _health; }

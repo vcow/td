@@ -2,8 +2,8 @@
 {
     public interface IWeapon
     {
-        float Radius { get; }
-        float Damage { get; }
+        int Radius { get; }
+        int Damage { get; }
         float RechargeTime { get; }
         float BulletSpeed { get; }
     }

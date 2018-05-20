@@ -4,6 +4,7 @@ using System.Linq;
 using Controllers.Scene;
 using Models;
 using Models.Enemies;
+using Models.Towers;
 using UnityEngine;
 using UnityEngine.Assertions;
 
@@ -18,11 +19,11 @@ namespace AI
     {
         private readonly IGameController _controller;
 
-        private FieldModel _field;
         private IEnumerator<WaveModel> _waveIterator;
 
         private readonly List<WaveLogic> _workingWaves = new List<WaveLogic>();
         private readonly List<EnemyLogic> _spawnedEnemies = new List<EnemyLogic>();
+        private readonly List<TowerLogic> _towers = new List<TowerLogic>();
 
         private Vector3[] _path;
         private int _targetHealth;
@@ -34,12 +35,12 @@ namespace AI
 
         public void Start()
         {
-            _field = GameModel.Instance.FieldModel;
-            Assert.IsNotNull(_field);
+            var fm = GameModel.Instance.FieldModel;
+            Assert.IsNotNull(fm);
 
-            _targetHealth = _field.TargetHealth;
-            var emitter = _field.Cells.FirstOrDefault(cell => cell.ItemType == ItemType.Emitter);
-            var target = _field.Cells.FirstOrDefault(cell => cell.ItemType == ItemType.Target);
+            _targetHealth = fm.TargetHealth;
+            var emitter = fm.Cells.FirstOrDefault(cell => cell.ItemType == ItemType.Emitter);
+            var target = fm.Cells.FirstOrDefault(cell => cell.ItemType == ItemType.Target);
 
             if (emitter == null || target == null)
             {
@@ -47,7 +48,7 @@ namespace AI
                 _controller.Lose(GetResult());
                 return;
             }
-            
+
             var pf = new PathFinder();
             var coordPath = pf.CalcPath(emitter, target);
             var vector2Ints = coordPath as Vector2Int[] ?? coordPath.ToArray();
@@ -65,7 +66,19 @@ namespace AI
                 _path[i] = _controller.Coord2World(vector2Ints[i]);
             }
 
-            _waveIterator = _field.Waves.GetEnumerator();
+            var cellSize =
+                (Mathf.Abs((_controller.Coord2World(Vector2Int.zero) - _controller.Coord2World(Vector2Int.right)).x)
+                 + Mathf.Abs((_controller.Coord2World(Vector2Int.zero) - _controller.Coord2World(Vector2Int.up)).z))
+                * 0.5f;
+            fm.Cells.ForEach(cell =>
+            {
+                var towerModel = cell.Item as ITower;
+                if (towerModel == null) return;
+                _towers.Add(new TowerLogic(towerModel, _controller.Coord2World(cell.Coordinate),
+                    cellSize, _spawnedEnemies, this));
+            });
+
+            _waveIterator = fm.Waves.GetEnumerator();
             ApplyNextWave();
         }
 
@@ -108,7 +121,7 @@ namespace AI
             {
                 Debug.LogWarning("Wave already was destroyed.");
             }
-            
+
             ApplyNextWave();
         }
 
@@ -121,6 +134,15 @@ namespace AI
             var enemy = new EnemyLogic(EnemiesLibrary.GetEnemyByType(type), _path, this);
             _spawnedEnemies.Add(enemy);
             _controller.AddEnemy(enemy);
+        }
+
+        /// <summary>
+        /// Добавить выстрел
+        /// </summary>
+        /// <param name="shot">Добавляемый выстрел.</param>
+        public void Shoot(ShotLogic shot)
+        {
+            throw new System.NotImplementedException();
         }
 
         /// <summary>
@@ -153,12 +175,11 @@ namespace AI
         {
             _targetHealth -= hitPoints;
             Debug.LogFormat("--- Hit by {0} points, health became {1}.", hitPoints, _targetHealth);
-            
+
             if (_targetHealth <= 0)
             {
                 _controller.Lose(GetResult());
             }
-            
         }
 
         private IEnumerator StartWaveCoroutine(float delay, WaveModel wave)
@@ -187,6 +208,7 @@ namespace AI
 
             _spawnedEnemies.ForEach(enemy => enemy.Update(deltaTime));
             _workingWaves.ForEach(wave => wave.Update(deltaTime));
+            _towers.ForEach(tower => tower.Update(deltaTime));
         }
     }
 }
